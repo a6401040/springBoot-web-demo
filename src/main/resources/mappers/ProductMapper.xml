@@ -10,30 +10,30 @@
 
     <select id="select" resultType="com.myself.model.entity.Product">
         SELECT *
-        FROM t_product
+        FROM product
         WHERE id = #{id}
         LIMIT 1
     </select>
 
     <select id="getAllProduct" resultMap="baseResultMap">
         SELECT *
-        FROM t_product
+        FROM product
     </select>
 
     <update id="update" parameterType="com.myself.model.entity.Product" flushCache="true">
-        UPDATE t_product
+        UPDATE product
         SET name = #{name}, price = #{price}
         WHERE id = #{id}
         LIMIT 1
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
-        DELETE FROM t_product
+        DELETE FROM product
         WHERE id = #{id}
         LIMIT 1
     </delete>
 
     <insert id="insert" parameterType="com.myself.model.entity.Product">
-        INSERT INTO t_product (name, price) VALUES (#{name}, #{price});
+        INSERT INTO product (name, price) VALUES (#{name}, #{price});
     </insert>
 </mapper>
