@@ -31,7 +31,7 @@ public class ProductController {
      */
     @GetMapping("/{id}")
     public ReturnResponse getProduct(@PathVariable("id") Long productId) throws ServiceException {
-        return ResponseUtil.generateResponse(productService.select(productId));
+        return ResponseUtil.generateResponse(productService.getById(productId));
     }
 
     /**
@@ -42,7 +42,7 @@ public class ProductController {
      */
     @GetMapping
     public ReturnResponse getAllProduct() {
-        return ResponseUtil.generateResponse(productService.getAllProduct());
+        return ResponseUtil.generateResponse(productService.list());
     }
 
     /**
@@ -55,7 +55,8 @@ public class ProductController {
      */
     @PutMapping("/{id}")
     public ReturnResponse updateProduct(@PathVariable("id") Long productId, @RequestBody Product newProduct) throws ServiceException {
-        return ResponseUtil.generateResponse(productService.update(productId, newProduct));
+        newProduct.setId(productId);
+        return ResponseUtil.generateResponse(productService.saveOrUpdate(newProduct));
     }
 
     /**
@@ -67,7 +68,7 @@ public class ProductController {
      */
     @DeleteMapping("/{id}")
     public ReturnResponse deleteProduct(@PathVariable("id") long productId) throws ServiceException {
-        return ResponseUtil.generateResponse(productService.delete(productId));
+        return ResponseUtil.generateResponse(productService.removeById(productId));
     }
 
     /**
@@ -79,6 +80,6 @@ public class ProductController {
      */
     @PostMapping
     public ReturnResponse addProduct(@RequestBody Product newProduct) throws ServiceException {
-        return ResponseUtil.generateResponse(productService.add(newProduct));
+        return ResponseUtil.generateResponse(productService.save(newProduct));
     }
 }

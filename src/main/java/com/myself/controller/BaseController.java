@@ -6,13 +6,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Base controller
- *
- * @author HelloWood
- * @date 2017-09-25 13:31
- * @Email hellowoodes@gmail.com
+ * 验证是否发布成功
  */
-
 @RestController
 public class BaseController {
 

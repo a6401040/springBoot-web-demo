@@ -1,7 +1,11 @@
 package com.myself.common.datasource;
 
+import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.myself.common.enums.DataSourceEnum;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +29,7 @@ import java.util.Map;
  */
 @Configuration
 @PropertySource(value = "classpath:properties/datasource.properties", encoding = "UTF-8")
-public class DataSourceConfigurer {
+public class DataSourceConfigurer extends AbstractMyBatisPlusConfig{
 
     /**
      * master DataSource
@@ -57,6 +61,7 @@ public class DataSourceConfigurer {
      * @return the data source
      */
     @Bean("dynamicDataSource")
+    @Override
     public DataSource dynamicDataSource() {
         DynamicRoutingDataSource dynamicRoutingDataSource = new DynamicRoutingDataSource();
         Map<Object, Object> dataSourceMap = new HashMap<>(2);
@@ -79,8 +84,8 @@ public class DataSourceConfigurer {
     }
 
     /**
-     * Sql session factory bean.
-     * Here to config datasource for SqlSessionFactory
+     * MybatisSqlSession factory bean.
+     * Here to config datasource for MybatisSqlSessionFactory
      * <p>
      * You need to add @{@code @ConfigurationProperties(prefix = "mybatis")}, if you are using *.xml file,
      * the {@code 'mybatis.type-aliases-package'} and {@code 'mybatis.mapper-locations'} should be set in
@@ -90,15 +95,9 @@ public class DataSourceConfigurer {
      */
     @Bean
     @ConfigurationProperties(prefix = "mybatis")
-    public SqlSessionFactoryBean sqlSessionFactoryBean() throws IOException {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        // Here to config mybatis
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.myself.dao");
-        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("mappers/**Mapper.xml"));
-        // Here is very important, if don't config this, will can't switch datasource
-        // put all datasource into SqlSessionFactoryBean, then will autoconfig SqlSessionFactory
-        sqlSessionFactoryBean.setDataSource(dynamicDataSource());
-        return sqlSessionFactoryBean;
+    @Override
+    public MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean() throws IOException {
+        return super.mybatisSqlSessionFactoryBean();
     }
 
     /**
@@ -107,8 +106,9 @@ public class DataSourceConfigurer {
      * @return the platform transaction manager
      */
     @Bean
+    @Override
     public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dynamicDataSource());
+        return super.transactionManager();
     }
 }
 

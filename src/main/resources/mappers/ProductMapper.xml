@@ -1,39 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.myself.dao.ProductDao">
+<mapper namespace="com.myself.mapper.ProductMapper">
 
-    <resultMap id="baseResultMap" type="com.myself.model.entity.Product">
-        <id column="id" property="id" javaType="java.lang.Long" jdbcType="INTEGER"></id>
-        <result column="name" property="name" javaType="java.lang.String" jdbcType="VARCHAR"></result>
-        <result column="price" property="price" javaType="java.lang.Long" jdbcType="BIGINT"></result>
-    </resultMap>
 
-    <select id="select" resultType="com.myself.model.entity.Product">
-        SELECT *
-        FROM t_product
-        WHERE id = #{id}
-        LIMIT 1
-    </select>
-
-    <select id="getAllProduct" resultMap="baseResultMap">
-        SELECT *
-        FROM t_product
-    </select>
-
-    <update id="update" parameterType="com.myself.model.entity.Product" flushCache="true">
-        UPDATE t_product
-        SET name = #{name}, price = #{price}
-        WHERE id = #{id}
-        LIMIT 1
-    </update>
-
-    <delete id="delete" parameterType="java.lang.Long">
-        DELETE FROM t_product
-        WHERE id = #{id}
-        LIMIT 1
-    </delete>
-
-    <insert id="insert" parameterType="com.myself.model.entity.Product">
-        INSERT INTO t_product (name, price) VALUES (#{name}, #{price});
-    </insert>
 </mapper>

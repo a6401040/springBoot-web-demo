@@ -27,7 +27,7 @@ public class DynamicDataSourceAspect {
     /**
      * 使用注释对全部的dao访问进行数据源切面选择操作
      */
-    @Pointcut("execution( * com.myself.dao.*.*(..))")
+    @Pointcut("execution( * com.myself.mapper.*.*(..))")
     public void daoAspect() {
     }
 
