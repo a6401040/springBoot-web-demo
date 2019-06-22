@@ -1,19 +1,13 @@
 package com.myself.common.datasource;
-
-import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
+;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.myself.common.enums.DataSourceEnum;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -28,7 +22,7 @@ import java.util.Map;
  * @version V1.0
  */
 @Configuration
-@PropertySource(value = "classpath:properties/datasource.properties", encoding = "UTF-8")
+@PropertySource(value = "classpath:config/config.properties", encoding = "UTF-8")
 public class DataSourceConfigurer extends AbstractMyBatisPlusConfig{
 
     /**
@@ -89,7 +83,7 @@ public class DataSourceConfigurer extends AbstractMyBatisPlusConfig{
      * <p>
      * You need to add @{@code @ConfigurationProperties(prefix = "mybatis")}, if you are using *.xml file,
      * the {@code 'mybatis.type-aliases-package'} and {@code 'mybatis.mapper-locations'} should be set in
-     * {@code 'application.properties'} file, or there will appear invalid bond statement exception
+     * {@code 'application.config'} file, or there will appear invalid bond statement exception
      *
      * @return the sql session factory bean
      */

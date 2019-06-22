@@ -1,16 +1,11 @@
 package com.myself.common.datasource;
 
-import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.myself.common.enums.DataSourceMultiEnum;
-import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -22,11 +17,12 @@ import java.util.Map;
  * 一主多重数据源配置器
  * 改用 一主多重 请添加@Configuration 并注释掉DataSourceConfigurer中的@Configuration
  * * @Configuration
- * * @PropertySource(value = "classpath:datasource-multi.properties", encoding = "UTF-8")
+ * * @PropertySource(value = "classpath:config.properties", encoding = "UTF-8")
  * @author zhangqiling
  * @date 2019/6/20
  * @version V1.0
  */
+@SuppressWarnings("unused")
 public class DataSourceMultiConfigurer extends AbstractMyBatisPlusConfig{
 
     /**
@@ -109,7 +105,7 @@ public class DataSourceMultiConfigurer extends AbstractMyBatisPlusConfig{
      * <p>
      * You need to add @{@code @ConfigurationProperties(prefix = "mybatis")}, if you are using *.xml file,
      * the {@code 'mybatis.type-aliases-package'} and {@code 'mybatis.mapper-locations'} should be set in
-     * {@code 'application.properties'} file, or there will appear invalid bond statement exception
+     * {@code 'application.config'} file, or there will appear invalid bond statement exception
      *
      * @return the sql session factory bean
      */
