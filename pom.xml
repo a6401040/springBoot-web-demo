@@ -76,6 +76,13 @@
 			<artifactId>modelmapper</artifactId>
 			<version>2.1.1</version>
 		</dependency>
+		<!-- api2doc api文档生成-->
+		<dependency>
+			<groupId>com.github.terran4j</groupId>
+			<artifactId>terran4j-commons-api2doc</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
 	</dependencies>
 	
 	<build>
