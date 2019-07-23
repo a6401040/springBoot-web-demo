@@ -24,12 +24,31 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 
 /**
  * <p>
- * Mysql代码生成器
+ * 代码生成器
  * </p>
  *
- * @author Caratacus
+ * @author zhangqiling
  */
-public class MysqlGenerator extends SuperGenerator {
+public class DatabaseGenerator extends SuperGenerator {
+
+    private String dbType;
+
+    private String dirveName;
+
+    private String username;
+
+    private String password;
+
+    private String url;
+
+
+    public DatabaseGenerator(String dbType, String dirveName, String username, String password, String url) {
+        this.dbType = dbType;
+        this.dirveName = dirveName;
+        this.username = username;
+        this.password = password;
+        this.url = url;
+    }
 
     /**
      * <p>
@@ -38,8 +57,10 @@ public class MysqlGenerator extends SuperGenerator {
      */
     public void generator(String tableName) {
 
+        //设置数据库
+        getDataSourceConfig(dbType, dirveName, username, password, url);
         // 代码生成器
-        AutoGenerator mpg = getAutoGenerator(tableName);
+        AutoGenerator mpg = getAutoGenerator(dbType, tableName, dirveName, username, password, url);
         mpg.execute();
         if (tableName == null) {
             System.err.println(" Generator Success !");

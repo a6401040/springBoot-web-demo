@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.converts.OracleTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
@@ -24,13 +25,14 @@ import java.util.*;
  */
 public class SuperGenerator {
 
+
     /**
      * 获取TemplateConfig
      *
      * @return
      */
     protected TemplateConfig getTemplateConfig() {
-        return new TemplateConfig().setXml(null);
+        return new TemplateConfig().setEntity("templates/entity-custom.java").setController("templates/controller-custom.java.vm").setXml(null);
     }
 
     /**
@@ -43,6 +45,8 @@ public class SuperGenerator {
             @Override
             public void initMap() {
                 Map<String, Object> map = new HashMap<>();
+                //设置自定义api2doc 配置是否读取api2doc
+                map.put("api2doc", true);
                 this.setMap(map);
             }
         }.setFileOutConfigList(Collections.<FileOutConfig>singletonList(new FileOutConfig(
@@ -50,7 +54,7 @@ public class SuperGenerator {
             // 自定义输出文件目录
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return getResourcePath() + "/mappers/" + tableInfo.getEntityName() + "Mapper.xml";
+                return getResourcePath() + "/config/mappers/" + tableInfo.getEntityName() + "Mapper.xml";
             }
         }));
     }
@@ -62,7 +66,7 @@ public class SuperGenerator {
      */
     protected PackageConfig getPackageConfig() {
         return new PackageConfig()
-                .setParent("com.myself")
+                .setParent("com.nair.pss.dcs")
                 .setController("controller")
                 .setEntity("model.entity")
                 .setMapper("mapper")
@@ -84,7 +88,7 @@ public class SuperGenerator {
                 .setNaming(NamingStrategy.underline_to_camel)// 表名生成策略
                 //.setInclude(new String[] { "user" }) // 需要生成的表
                 //自定义实体父类
-                .setSuperEntityClass("com.myself.model.BaseModel")
+                .setSuperEntityClass("com.nair.pss.dcs.model.BaseModel")
                 // 自定义实体，公共字段
                 .setSuperEntityColumns("id")
                 .setTableFillList(tableFillList)
@@ -129,35 +133,59 @@ public class SuperGenerator {
      *
      * @return
      */
-    protected DataSourceConfig getDataSourceConfig() {
-        return new DataSourceConfig()
-                .setDbType(DbType.MYSQL)// 数据库类型
-                .setTypeConvert(new MySqlTypeConvert() {
-                    @Override
-                    public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
-                        if (fieldType.toLowerCase().equals("bit")) {
-                            return DbColumnType.BOOLEAN;
-                        }
-                        if (fieldType.toLowerCase().equals("tinyint")) {
-                            return DbColumnType.BOOLEAN;
-                        }
-                        if (fieldType.toLowerCase().equals("date")) {
-                            return DbColumnType.LOCAL_DATE;
-                        }
-                        if (fieldType.toLowerCase().equals("time")) {
-                            return DbColumnType.LOCAL_TIME;
-                        }
-                        if (fieldType.toLowerCase().equals("datetime")) {
-                            return DbColumnType.LOCAL_DATE_TIME;
-                        }
-                        return super.processTypeConvert(globalConfig, fieldType);
+    protected DataSourceConfig getDataSourceConfig(String dbType, String dirveName, String username, String password, String url) {
+        DbType type = DbType.MYSQL;
+        ITypeConvert typeConvert = new MySqlTypeConvert() {
+            @Override
+            public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
+                if (fieldType.toLowerCase().equals("bit")) {
+                    return DbColumnType.BOOLEAN;
+                }
+                if (fieldType.toLowerCase().equals("tinyint")) {
+                    return DbColumnType.BOOLEAN;
+                }
+                if (fieldType.toLowerCase().equals("date")) {
+                    return DbColumnType.LOCAL_DATE;
+                }
+                if (fieldType.toLowerCase().equals("time")) {
+                    return DbColumnType.LOCAL_TIME;
+                }
+                if (fieldType.toLowerCase().equals("datetime")) {
+                    return DbColumnType.LOCAL_DATE_TIME;
+                }
+                return super.processTypeConvert(globalConfig, fieldType);
+            }
+        };
+        if(dbType.equals("oracle")){
+            type = DbType.ORACLE;
+            typeConvert = new OracleTypeConvert() {
+                @Override
+                public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
+                    if (fieldType.toLowerCase().equals("number")) {
+                        return DbColumnType.INTEGER;
                     }
-                })
-                .setDriverName("com.mysql.cj.jdbc.Driver")
-                .setUsername("zql")
-                .setPassword("abcd1234")
-                .setUrl("jdbc:mysql://192.168.184.129/myself?useSSL=false&characterEncoding=utf8");
+                    if (fieldType.toLowerCase().equals("date")) {
+                        return DbColumnType.DATE;
+                    }
+                    if (fieldType.toLowerCase().equals("time")) {
+                        return DbColumnType.DATE;
+                    }
+                    if (fieldType.toLowerCase().equals("datetime")) {
+                        return DbColumnType.DATE;
+                    }
+                    return super.processTypeConvert(globalConfig, fieldType);
+                }
+            };
+        }
+        return new DataSourceConfig()
+                .setDbType(type)// 数据库类型
+                .setTypeConvert(typeConvert)
+                .setDriverName(dirveName)
+                .setUsername(username)
+                .setPassword(password)
+                .setUrl(url);
     }
+
 
     /**
      * 获取GlobalConfig
@@ -223,12 +251,12 @@ public class SuperGenerator {
      * @param tableName
      * @return
      */
-    protected AutoGenerator getAutoGenerator(String tableName) {
+    protected AutoGenerator getAutoGenerator(String dbType,String tableName, String dirveName, String username, String password, String url) {
         return new AutoGenerator()
                 // 全局配置
                 .setGlobalConfig(getGlobalConfig())
                 // 数据源配置
-                .setDataSource(getDataSourceConfig())
+                .setDataSource(getDataSourceConfig(dbType, dirveName, username, password, url))
                 // 策略配置
                 .setStrategy(getStrategyConfig(tableName))
                 // 包配置
