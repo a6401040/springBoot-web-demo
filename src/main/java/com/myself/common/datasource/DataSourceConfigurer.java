@@ -1,7 +1,6 @@
 package com.myself.common.datasource;
 ;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.myself.common.enums.DataSourceEnum;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +16,7 @@ import java.util.Map;
 
 /**
  * 数据源配置器
+ * 单个数据源
  * @author zhangqiling
  * @date 2019/6/20
  * @version V1.0
@@ -26,25 +26,14 @@ import java.util.Map;
 public class DataSourceConfigurer extends AbstractMyBatisPlusConfig{
 
     /**
-     * master DataSource
+     * single DataSource
      *
      * @return data source
      */
-    @Bean("master")
+    @Bean("hikari")
     @Primary
-    @ConfigurationProperties(prefix = "spring.datasource.hikari.master")
-    public DataSource master() {
-        return DataSourceBuilder.create().build();
-    }
-
-    /**
-     * Slave data source.
-     *
-     * @return the data source
-     */
-    @Bean("slave")
-    @ConfigurationProperties(prefix = "spring.datasource.hikari.slave")
-    public DataSource slave() {
+    @ConfigurationProperties(prefix = "spring.datasource.hikari")
+    public DataSource hikari() {
         return DataSourceBuilder.create().build();
     }
 
@@ -57,24 +46,8 @@ public class DataSourceConfigurer extends AbstractMyBatisPlusConfig{
     @Bean("dynamicDataSource")
     @Override
     public DataSource dynamicDataSource() {
-        DynamicRoutingDataSource dynamicRoutingDataSource = new DynamicRoutingDataSource();
-        Map<Object, Object> dataSourceMap = new HashMap<>(2);
-        dataSourceMap.put(DataSourceEnum.master.name(), master());
-        dataSourceMap.put(DataSourceEnum.slave.name(), slave());
-
-
-        // Set master datasource as default
-        dynamicRoutingDataSource.setDefaultTargetDataSource(master());
-        // Set master and slave datasource as target datasource
-        dynamicRoutingDataSource.setTargetDataSources(dataSourceMap);
-
-        // To put datasource keys into DataSourceContextHolder to judge if the datasource is exist
-        DynamicDataSourceContextHolder.dataSourceEnums.addAll(dataSourceMap.keySet());
-
-        // To put slave datasource keys into DataSourceContextHolder to load balance
-        DynamicDataSourceContextHolder.slaveDataSourceEnums.addAll(dataSourceMap.keySet());
-        DynamicDataSourceContextHolder.slaveDataSourceEnums.remove(DataSourceEnum.master.name());
-        return dynamicRoutingDataSource;
+        //直接设置单库
+        return hikari();
     }
 
     /**

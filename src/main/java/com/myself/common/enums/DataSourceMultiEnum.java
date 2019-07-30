@@ -8,16 +8,11 @@ package com.myself.common.enums;
  */
 public enum DataSourceMultiEnum {
 
+
     //主库
     master,
 
-    //从库Alpha
-    slaveAlpha,
-
-    //从库Beta
-    slaveBeta,
-
-    //从库Gamma
-    slaveGamma
+    //从库
+    slave
 
 }

@@ -17,7 +17,7 @@ import java.util.Map;
  * 一主多重数据源配置器
  * 改用 一主多重 请添加@Configuration 并注释掉DataSourceConfigurer中的@Configuration
  * * @Configuration
- * * @PropertySource(value = "classpath:config.properties", encoding = "UTF-8")
+ * * @PropertySource(value = "classpath:config-multi.properties", encoding = "UTF-8")
  * @author zhangqiling
  * @date 2019/6/20
  * @version V1.0
@@ -38,37 +38,16 @@ public class DataSourceMultiConfigurer extends AbstractMyBatisPlusConfig{
     }
 
     /**
-     * Slave alpha data source.
+     * Slave data source.
      *
      * @return the data source
      */
-    @Bean("slaveAlpha")
-    @ConfigurationProperties(prefix = "spring.datasource.hikari.slave-alpha")
-    public DataSource slaveAlpha() {
+    @Bean("slave")
+    @ConfigurationProperties(prefix = "spring.datasource.hikari.slave")
+    public DataSource slave() {
         return DataSourceBuilder.create().build();
     }
 
-    /**
-     * Slave beta data source.
-     *
-     * @return the data source
-     */
-    @Bean("slaveBeta")
-    @ConfigurationProperties(prefix = "spring.datasource.hikari.slave-beta")
-    public DataSource slaveBeta() {
-        return DataSourceBuilder.create().build();
-    }
-
-    /**
-     * Slave gamma data source.
-     *
-     * @return the data source
-     */
-    @Bean("slaveGamma")
-    @ConfigurationProperties(prefix = "spring.datasource.hikari.slave-gamma")
-    public DataSource slaveGamma() {
-        return DataSourceBuilder.create().build();
-    }
 
     /**
      * Dynamic data source.
@@ -79,11 +58,10 @@ public class DataSourceMultiConfigurer extends AbstractMyBatisPlusConfig{
     @Override
     public DataSource dynamicDataSource() {
         DynamicRoutingDataSource dynamicRoutingDataSource = new DynamicRoutingDataSource();
-        Map<Object, Object> dataSourceMap = new HashMap<>(4);
+        Map<Object, Object> dataSourceMap = new HashMap<>(2);
         dataSourceMap.put(DataSourceMultiEnum.master.name(), master());
-        dataSourceMap.put(DataSourceMultiEnum.slaveAlpha.name(), slaveAlpha());
-        dataSourceMap.put(DataSourceMultiEnum.slaveBeta.name(), slaveBeta());
-        dataSourceMap.put(DataSourceMultiEnum.slaveGamma.name(), slaveGamma());
+        dataSourceMap.put(DataSourceMultiEnum.slave.name(), slave());
+
 
         // Set master datasource as default
         dynamicRoutingDataSource.setDefaultTargetDataSource(master());
@@ -127,4 +105,3 @@ public class DataSourceMultiConfigurer extends AbstractMyBatisPlusConfig{
         return super.transactionManager();
     }
 }
-

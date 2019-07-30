@@ -37,7 +37,7 @@ public class ProductController {
     @Api2Doc(order = 1)
     @ApiComment("根据产品id，查询此产品的信息")
     @ApiError(value = "product.not.found", comment = "此产品不存在！")
-    @GetMapping(name = "查询单个用户", value = "/{id}")
+    @GetMapping(name = "查询单个用户", value = "/get/{id}")
     public ReturnResponse getProduct(@PathVariable("id") Long productId) throws ServiceException {
         return ResponseUtil.generateResponse(productService.getById(productId));
     }
@@ -50,7 +50,7 @@ public class ProductController {
      */
     @Api2Doc(order = 2)
     @ApiComment("查询所有产品")
-    @GetMapping(name = "查询所有产品",value="")
+    @GetMapping(name = "查询所有产品",value="/getAll")
     public ReturnResponse getAllProduct() {
         return ResponseUtil.generateResponse(productService.list());
     }
@@ -66,7 +66,7 @@ public class ProductController {
     @Api2Doc(order = 3)
     @ApiComment("根据产品id，更新指定的产品")
     @ApiError(value = "product.not.found", comment = "此产品不存在！")
-    @PutMapping(name = "更新指定产品", value = "/{id}")
+    @PutMapping(name = "更新指定产品", value = "/update/{id}")
     public ReturnResponse updateProduct(@PathVariable("id") Long productId, @RequestBody Product newProduct) throws ServiceException {
         newProduct.setId(productId);
         return ResponseUtil.generateResponse(productService.saveOrUpdate(newProduct));
@@ -82,7 +82,7 @@ public class ProductController {
     @Api2Doc(order = 4)
     @ApiComment("根据产品id，删除指定的产品")
     @ApiError(value = "product.not.found", comment = "此产品不存在！")
-    @DeleteMapping(name = "删除指定产品", value = "/{id}")
+    @DeleteMapping(name = "删除指定产品", value = "/delete/{id}")
     public ReturnResponse deleteProduct(@PathVariable("id") long productId) throws ServiceException {
         return ResponseUtil.generateResponse(productService.removeById(productId));
     }
@@ -97,7 +97,7 @@ public class ProductController {
     @Api2Doc(order = 5)
     @ApiComment("添加一个新的产品。")
     @ApiError(value = "product.exists", comment = "此用户已经存在！")
-    @PostMapping(name = "新增产品",value="")
+    @PostMapping(name = "新增产品",value="/add")
     public ReturnResponse addProduct(@RequestBody Product newProduct) throws ServiceException {
         return ResponseUtil.generateResponse(productService.save(newProduct));
     }

@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * Multiple DataSource Aspect多数据源切面
+ * @Aspect
+ * @Component
  * @author zhangqiling
  * @date 2019/6/20
  * @version V1.0
  */
-@Aspect
-@Component
 public class DynamicDataSourceAspect {
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceAspect.class);
 

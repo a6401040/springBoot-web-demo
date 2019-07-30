@@ -1,7 +1,7 @@
 package com.myself.common.datasource;
 
 
-import com.myself.common.enums.DataSourceEnum;
+import com.myself.common.enums.DataSourceMultiEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public class DynamicDataSourceContextHolder {
     /**
      * Maintain variable for every thread, to avoid effect other thread
      */
-    private static final ThreadLocal<String> CONTEXT_HOLDER = ThreadLocal.withInitial(DataSourceEnum.master::name);
+    private static final ThreadLocal<String> CONTEXT_HOLDER = ThreadLocal.withInitial(DataSourceMultiEnum.master::name);
 
 
     /**
@@ -49,7 +49,7 @@ public class DynamicDataSourceContextHolder {
      * Use master data source.
      */
     public static void useMasterDataSource() {
-        CONTEXT_HOLDER.set(DataSourceEnum.master.name());
+        CONTEXT_HOLDER.set(DataSourceMultiEnum.master.name());
     }
 
     /**
